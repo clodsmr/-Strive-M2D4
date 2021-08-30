@@ -36,26 +36,21 @@
     </style>
   </head>
   <body>
-      <h1>Team generator</h1>
-      <div class="box">
+      <h1 style="text-align: center;">Team generator</h1>
+      <div class="container">
       <div class="row">
           <div class="col-4">
             <input type="text" id="players">
           </div>
-              <div class="col-4">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">Teams</span>
-                    </div>
-                    <textarea class="form-control" aria-label="With textarea"></textarea>
-                  </div>
-              </div>
-              <div class="col-4">
-                <button type="button" class="btn btn-dark">Assign</button>
-              </div>
+          <div class="col-4">
+             <input type="text" id="teams">
+          </div>
+          <div class="col-4">
+            <button type="button" class="btn btn-dark" onclick="addToTeam()">Assign</button>
+           </div>
       </div>
       </div>  
-      <div class="box">
+      <div class="container">
           <div class="row">
               <div class="col-12">
                   <h2>Waiting list</h2>
@@ -63,6 +58,8 @@
               </div>
           </div>
       </div>    
+      <div class="container" id="teams-display"> </div>
+      
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -75,23 +72,90 @@
     ></script>
     <script>
 
-        
+       let player = []
 
        function addList () {
-            let name = document.getElementById("players")
+            let name = document.getElementById("players").value
+            player.push(name)
             let waitingList = document.getElementById("waitinglist")
                 let item = document.createElement("li")
-                item.appendChild(name)
+                item.classList.add("playersList")
+                nameTxt = document.createTextNode(name)
+                item.appendChild(nameTxt)
                 waitingList.appendChild(item)
+                document.getElementById('players').value=''
             }
         
         
 
         document.getElementById("players").addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-       addList()
-    }
-})
+        if (e.key === 'Enter') {
+         addList()
+         }
+         })
+
+         
+
+         function teams () {
+          
+            let firstRow = document.createElement("div")
+            firstRow.classList.add("row")
+
+            let numberOfTeams = document.getElementById("teams").value
+            let number = parseInt(numberOfTeams)
+
+
+            for (i=0; i<number; i++) {
+
+                let teamCol = document.createElement("div")
+                teamCol.classList.add("col-3")
+                let title = document.createElement("h3")
+                title.innerText = `Team ${i+1}`
+                teamCol.appendChild(title)
+                let teamList = document.createElement("ul")
+                teamList.id = `Team ${i}`
+                
+                teamCol.appendChild(teamList)
+                firstRow.appendChild(teamCol)
+                document.getElementById("teams-display").appendChild(firstRow)
+               
+            }
+
+         
+         }
+
+         document.getElementById("teams").addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+         teams()
+         }
+         })
+
+         function addToTeam () {
+
+          let numberOfTeams = document.getElementById("teams").value
+          let number = parseInt(numberOfTeams)
+
+          for (k=0; k<player.length; k++) {
+
+            let playerNode = document.createElement("li")
+            let nodeTxt = document.createTextNode(player[k])
+            playerNode.appendChild(nodeTxt)
+
+            let waitingList = document.getElementById("waitinglist")
+            waitingList.removeChild(waitingList.firstChild)
+
+            let rnd = Math.floor(Math.random() * number)
+            let randomTeam = document.getElementById(`Team ${rnd}`)
+            randomTeam.appendChild(playerNode)
+          }
+         }
+
+         
+         
+
+
+
+
 
 
     </script>
